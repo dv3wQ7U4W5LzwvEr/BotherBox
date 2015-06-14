@@ -23,41 +23,58 @@ def crazyArchiving(fileName, nbArchives):
 
 # crazyArchiving("toto.tar", 30)
 
-def interface():
-    name = "The Crazy Archiver"
-    fenetre = Tk()
-    fenetre.title(name)
-    fenetre.attributes("-type", 1)
+class Interface:
 
-    menu(fenetre)
-    panelArchive(fenetre)
-    fenetre.mainloop()
+    def __init__(self):
+        name = "The Crazy Archiver"
+        self.fenetre = Tk()
+        self.fenetre.title(name)
+        self.fenetre.attributes("-type", 1)
+        self.panelAbout = PanedWindow(self.fenetre, orient=HORIZONTAL)
+        self.panelArchive = PanedWindow(self.fenetre, orient=HORIZONTAL)
+        self.menu()
+        self.manageEvent()
 
-def menu(fenetre):
-    menubar = Menu(fenetre)
-    menu1 = Menu(menubar, tearoff=0)
-    menubar.add_cascade(label="Archive", menu=menu1)
-    menu2 = Menu(menubar, tearoff=0)
-    menubar.add_cascade(label="About", menu=menu2)
-    fenetre.config(menu=menubar)
-
-def panelArchive(fenetre):
-    pName = PanedWindow(fenetre, orient=HORIZONTAL)
-    pName.add(Label(pName, text="Nom de l'archive "))
-    pName.add(Entry(pName, textvariable='string', width=20))
-    pName.pack(side=TOP, expand=Y, fill=BOTH, padx=10)
-
-    pCount = PanedWindow(fenetre, orient=HORIZONTAL)
-    pCount.add(Label(pCount, text="Nombre de boucle "))
-    pCount.add(Entry(pCount, textvariable='string', width=4))
-    pCount.pack(side=TOP, expand=Y, fill=BOTH, padx=10)
-
-    Button(fenetre, text="Archiver", command=fenetre.quit).pack(padx=10, pady=10)
+    def menu(self):
+        menubar = Menu(self.fenetre, tearoff=0)
+        menubar.add_command(label="Archive", postcommand=self.displayPanelArchive())
+        menubar.add_command(label="About")
+        self.fenetre.config(menu=menubar)
 
 
+    def manageEvent(self):
+        self.fenetre.bind("Archive", self.displayPanelArchive())
+        self.fenetre.bind("About", self.displayPanelAbout())
+
+    def displayPanelArchive(self):
+        self.panelAbout.pack_forget()
+        self.createPanelArchive()
+
+    def createPanelArchive(self):
+        pName = PanedWindow(self.panelArchive, orient=HORIZONTAL)
+        pName.add(Label(pName, text="Nom de l'archive "))
+        pName.add(Entry(pName, textvariable='string', width=20))
+        pName.pack(side=TOP, fill=BOTH, padx=10)
+
+        pCount = PanedWindow(self.panelArchive, orient=HORIZONTAL)
+        pCount.add(Label(pCount, text="Nombre de boucle "))
+        pCount.add(Entry(pCount, textvariable='string', width=4))
+        pCount.pack(side=TOP, fill=BOTH, padx=10)
+
+        Button(self.panelArchive, text="Archiver", command=self.fenetre.quit).pack(padx=10, pady=10)
+        self.panelArchive.pack()
+
+    def displayPanelAbout(self):
+        self.panelArchive.pack_forget()
+        self.createPanelAbout()
+
+    def createPanelAbout(self):
+        self.panelAbout.add(Label(self.panelAbout, text="Cet utilitaire a été créé par Florian Vautard"))
+        self.panelAbout.pack(side=TOP, fill=BOTH, padx=10)
+
+    def readInterface(self):
+        self.fenetre.mainloop()
 
 
-
-
-
-interface()
+it = Interface()
+it.readInterface()
