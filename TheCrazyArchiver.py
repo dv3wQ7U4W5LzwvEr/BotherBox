@@ -4,77 +4,92 @@ import tarfile
 import os
 import shutil
 from tkinter import *
+from tkinter.messagebox import *
 
 
-
-def crazyArchiving(fileName, nbArchives):
+def crazy_archiving(file_name, nb_loop):
     path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/tmp/"
     count = 0
-    while(count < nbArchives):
-        directoryName = "directory"
-        os.makedirs(directoryName)
-        os.rename(path + fileName, path + directoryName + "/" + fileName)
-        tar = tarfile.TarFile(fileName, 'w')
-        tar.add(directoryName, directoryName)
+    while count < nb_loop:
+        directory_name= "directory"
+        os.makedirs(directory_name)
+        os.rename(path + file_name, path + directory_name + "/" + file_name)
+        tar = tarfile.TarFile(file_name, 'w')
+        tar.add(directory_name, directory_name)
         tar.close()
-        shutil.rmtree(path + directoryName)
+        shutil.rmtree(path + directory_name)
         count = count + 1
 
 
 # crazyArchiving("toto.tar", 30)
 
-class Interface:
+class Interface(Tk):
 
     def __init__(self):
+        Tk.__init__(self)
         name = "The Crazy Archiver"
-        self.fenetre = Tk()
-        self.fenetre.title(name)
-        self.fenetre.attributes("-type", 1)
-        self.panelAbout = PanedWindow(self.fenetre, orient=HORIZONTAL)
-        self.panelArchive = PanedWindow(self.fenetre, orient=HORIZONTAL)
+        self.title(name)
+        self.panel_archive()
         self.menu()
-        self.manageEvent()
 
     def menu(self):
-        menubar = Menu(self.fenetre, tearoff=0)
-        menubar.add_command(label="Archive", postcommand=self.displayPanelArchive())
-        menubar.add_command(label="About")
-        self.fenetre.config(menu=menubar)
+        menubar = Menu(self, tearoff=0)
+        menubar.add_command(label="Archive")
+        self.config(menu=menubar)
 
 
-    def manageEvent(self):
-        self.fenetre.bind("Archive", self.displayPanelArchive())
-        self.fenetre.bind("About", self.displayPanelAbout())
+    def panel_archive(self):
+        panel_archive = PanedWindow(self, orient=HORIZONTAL)
+        p_name = PanedWindow(panel_archive, orient=HORIZONTAL)
+        p_name.add(Label(p_name, text="Nom de l'archive "))
+        file_name = StringVar()
+        entry_file_name= Entry(p_name, textvariable=file_name, width=20)
+        p_name.add(entry_file_name)
+        p_name.pack(side=TOP, fill=BOTH, padx=10)
 
-    def displayPanelArchive(self):
-        self.panelAbout.pack_forget()
-        self.createPanelArchive()
+        p_count = PanedWindow(panel_archive, orient=HORIZONTAL)
+        p_count.add(Label(p_count, text="Nombre de boucle "))
+        nb_loop = StringVar()
+        entry_nb_loop = Entry(p_count, textvariable=nb_loop, width=4)
+        p_count.add(entry_nb_loop)
+        p_count.pack(side=TOP, fill=BOTH, padx=10)
 
-    def createPanelArchive(self):
-        pName = PanedWindow(self.panelArchive, orient=HORIZONTAL)
-        pName.add(Label(pName, text="Nom de l'archive "))
-        pName.add(Entry(pName, textvariable='string', width=20))
-        pName.pack(side=TOP, fill=BOTH, padx=10)
+        button = Button(panel_archive, text="Archiver", command=self.archive(entry_file_name, entry_nb_loop))
+        button.pack(padx=10, pady=10)
+        panel_archive.pack()
 
-        pCount = PanedWindow(self.panelArchive, orient=HORIZONTAL)
-        pCount.add(Label(pCount, text="Nombre de boucle "))
-        pCount.add(Entry(pCount, textvariable='string', width=4))
-        pCount.pack(side=TOP, fill=BOTH, padx=10)
 
-        Button(self.panelArchive, text="Archiver", command=self.fenetre.quit).pack(padx=10, pady=10)
-        self.panelArchive.pack()
+    def archive(self, entry_file_name, entry_nb_loop):
+        file_name = entry_file_name.get()
+        showinfo('Archivage', file_name)
 
-    def displayPanelAbout(self):
-        self.panelArchive.pack_forget()
-        self.createPanelAbout()
+        print(entry_file_name.get())
+        if entry_file_name.get() is not "":
+            exit()
 
-    def createPanelAbout(self):
-        self.panelAbout.add(Label(self.panelAbout, text="Cet utilitaire a été créé par Florian Vautard"))
-        self.panelAbout.pack(side=TOP, fill=BOTH, padx=10)
-
-    def readInterface(self):
-        self.fenetre.mainloop()
 
 
 it = Interface()
-it.readInterface()
+it.mainloop()
+
+
+
+
+class SampleApp(Tk):
+    def __init__(self):
+        Tk.__init__(self)
+        self.lol()
+
+    def lol(self):
+        self.entry = Entry(self)
+        self.button = Button(self, text="Get", command=self.tata)
+        self.entry.pack()
+        self.button.pack()
+
+
+    def tata(self):
+        print(self.entry.get())
+        showinfo('Archivage', "lol")
+
+app = SampleApp()
+app.mainloop()
