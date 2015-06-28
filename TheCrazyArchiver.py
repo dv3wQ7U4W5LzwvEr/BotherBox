@@ -7,7 +7,7 @@ from tkinter import *
 from tkinter import messagebox
 from Message import Message
 
-import ExceptionFileMissing
+from ExceptionFileMissing import ExceptionFileMissing
 
 class Interface(Tk):
 
@@ -48,28 +48,30 @@ class Interface(Tk):
             file_name = str(self.entry_file_name.get())
             nb_loop = int(self.entry_nb_loop.get())
             self.crazy_archiving(file_name, nb_loop)
+            message = "Félicitation ! Le fichier '" + file_name + "' a bien été archivé récursivement " + str(nb_loop) + " fois."
+            messagebox.showinfo("Information", message)
         except ValueError:
             messagebox.showerror("Attention", Message.MESSAGE_VIDE.value)
         except IOError:
             messagebox.showerror(Message.EXCEPTION_FILE_MISSING)
         except ExceptionFileMissing as e:
-            messagebox.showerror(e)
+            messagebox.showerror("Erreur", e.value)
 
 
     def crazy_archiving(self, file_name, nb_loop):
-        path = str(os.path.abspath(os.path.dirname(sys.argv[0])))
+        path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
         if os.path.exists(path + file_name):
             count = 0
             while count < nb_loop:
                 directory_name = file_name
                 i = 1
                 while os.path.exists(directory_name):
-                    directory_name = file_name + "_" + i
+                    directory_name = file_name + "_" + str(i)
                     i += 1
                 os.makedirs(directory_name)
                 os.rename(path + file_name, path + directory_name + "/" + file_name)
                 tar = tarfile.TarFile(file_name, 'w')
-                tar.add(directory_name, directory_name)
+                tar.add(directory_name, file_name)
                 tar.close()
                 shutil.rmtree(path + directory_name)
                 count += 1
