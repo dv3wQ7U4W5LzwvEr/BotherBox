@@ -1,0 +1,4 @@
+# files to ignore
+/tmp/
+.idea
+__pycache__
