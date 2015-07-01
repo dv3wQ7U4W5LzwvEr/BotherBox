@@ -39,18 +39,24 @@ class TheCrazyArchiver:
 
     @staticmethod
     def unarchive_tar_file(file_name):
-        path_file = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
-        file = tarfile.open(path_file + file_name)
-        path_directory = path_file + "extract/"
-        # creation du répertoire d'accueil du fichier extrait
-        exctract_file_path = path_directory + file_name
-        while file.extractfile(exctract_file_path):
-            # extraction du fichier
-            file.close()
+        exctract_native_directory_path = os.path.abspath(os.path.dirname(sys.argv[1])) + "/tmp/"
+        tar = tarfile.open(exctract_native_directory_path + file_name)
+        path = exctract_native_directory_path + "directory/"
+        tar.extractall(path)
+        tar.close()
+        TheCrazyArchiver.unarchive(path)
 
-            # ouverture de l'archive extraite
-            file = tarfile.open(exctract_file_path)
-            # creation du repertoire d'accueil du futur fichier
-            path_directory += "extract/s"
-            # ouverture de l'archive extraite
-            exctract_file_path = path_directory + file_name
+    @staticmethod
+    def unarchive(path_init):
+        files_list = os.listdir(path_init)
+        for file in files_list:
+            try:
+                tar = tarfile.open(path_init + file)
+                path_after = path_init + "directory/"
+                tar.extractall(path_after)
+                tar.close()
+                files_list = os.listdir(path_init)
+                if files_list.__len__() > 1:
+                    TheCrazyArchiver.unarchive(path_after)
+            except tarfile.ReadError:
+                print("ok")
