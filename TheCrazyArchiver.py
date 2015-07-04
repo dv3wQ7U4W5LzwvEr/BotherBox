@@ -19,22 +19,15 @@ class TheCrazyArchiver:
             raise ExceptionNbLoop()
 
         if os.path.exists(file):
-            count = 0
-            directory_name = os.path.dirname(os.path.realpath(file)) + "/directory/"
-            file_tar = ntpath.basename(file) + ".tar"
-            while count < nb_loop:
-                i = 1
-                while os.path.exists(directory_name):
-                    directory_name = directory_name + "_" + str(i) + "/"
-                    i += 1
-                os.makedirs(directory_name)
-                file_move = directory_name + ntpath.basename(file)
-                os.rename(file, file_move)
-                file = file_tar
-                tar = tarfile.open(file, "w")
-                tar.add(os.path.dirname(file_move), "", False)
+            count = 1
+            file_path = file
+            while count <= nb_loop:
+                file_tar = os.path.realpath(file_path) + "_" + str(count) + ".tar"
+                tar = tarfile.open(file_tar, "w")
+                tar.add(file, ntpath.basename(file))
                 tar.close()
-                shutil.rmtree(os.path.dirname(os.path.realpath(file_move)))
+                os.remove(file)
+                file = file_tar
                 count += 1
         else:
             raise ExceptionFileMissing(file)
@@ -51,7 +44,7 @@ class TheCrazyArchiver:
     def __unarchive(path_init):
         files_list = os.listdir(path_init)
         for file in files_list:
-            if os.path.isfile(file):
+            if os.path.isfile(path_init + file):
                 try:
                     tar = tarfile.open(path_init + file)
                     path_after = path_init + "/directory/"

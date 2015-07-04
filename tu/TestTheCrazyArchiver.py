@@ -11,6 +11,14 @@ from exception.ExceptionFileMissing import ExceptionFileMissing
 
 class TestTheCrazyArchiver(unittest.TestCase):
 
+    def setUp(self):
+        if os.path.isdir("tmp"):
+            shutil.rmtree('tmp')
+        os.makedirs("tmp")
+        os.rename("__init__.py", "tmp/__init__.py")
+        fichier = open("__init__.py", "w")
+        fichier.close()
+
 
     def test_archive_wrong_input(self):
         # input : a loop number which is a word
@@ -52,8 +60,6 @@ class TestTheCrazyArchiver(unittest.TestCase):
         TheCrazyArchiver.unarchive_tar_file(path)
 
         self.assertTrue(os.path.exists("tmp/directory/directory/directory/mario"))
-        shutil.rmtree('tmp/directory')
-        os.remove("tmp/mario.tar")
 
     def test_archive(self):
         fichier = open("mario", "w")
@@ -63,10 +69,18 @@ class TestTheCrazyArchiver(unittest.TestCase):
 
         file = "/tmp/mario"
         path = os.path.abspath(os.path.dirname(sys.argv[1])) + file
-        TheCrazyArchiver.archive(path, 3)
-        file_tar = file + ".tar"
-        os.rename(os.path.dirname(sys.argv[1]) + "/mario.tar", os.path.dirname(sys.argv[1]) + file_tar)
+        i = 3
+        TheCrazyArchiver.archive(path, i)
+
+        file_tar = file + "_" + str(i) + ".tar"
         path = os.path.abspath(os.path.dirname(sys.argv[1])) + file_tar
         TheCrazyArchiver.unarchive_tar_file(path)
 
-        self.assertTrue(os.path.exists("tmp/directory/directory/directory/mario"))
+        path = "tmp"
+        for i in range(0, 3):
+            path += "/directory"
+        self.assertTrue(os.path.exists(path + "/mario"))
+
+    def tearDown(self):
+        if os.path.isdir("tmp"):
+            shutil.rmtree('tmp')
