@@ -41,7 +41,7 @@ class TheCrazyArchiver:
         TheCrazyArchiver.__unarchive(path)
 
     @staticmethod
-    def __unarchive(path_init):
+    def unarchive(path_init):
         files_list = os.listdir(path_init)
         for file in files_list:
             if os.path.isfile(path_init + file):

@@ -9,6 +9,7 @@ from TheCrazyArchiver import TheCrazyArchiver
 from exception.ExceptionNbLoop import ExceptionNbLoop
 from exception.ExceptionFileMissing import ExceptionFileMissing
 
+
 class TestTheCrazyArchiver(unittest.TestCase):
 
     def setUp(self):
@@ -18,7 +19,6 @@ class TestTheCrazyArchiver(unittest.TestCase):
         os.rename("__init__.py", "tmp/__init__.py")
         fichier = open("__init__.py", "w")
         fichier.close()
-
 
     def test_archive_wrong_input(self):
         # input : a loop number which is a word
@@ -34,7 +34,6 @@ class TestTheCrazyArchiver(unittest.TestCase):
             TheCrazyArchiver.archive("svsodoaae", 1)
 
     def test_unarchive(self):
-
         # creation du fichier
         fichier = open("mario", "w")
         fichier.writelines("luigi")
