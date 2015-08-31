@@ -33,7 +33,7 @@ class TheCrazyArchiver:
             raise ExceptionFileMissing(file)
 
     @staticmethod
-    def unarchive_tar_file(file):
+    def unarchive(file):
         tar = tarfile.open(file)
         path = os.path.dirname(os.path.realpath(file)) + "/directory/"
         tar.extractall(path)
@@ -41,7 +41,7 @@ class TheCrazyArchiver:
         TheCrazyArchiver.__unarchive(path)
 
     @staticmethod
-    def unarchive(path_init):
+    def __unarchive(path_init):
         files_list = os.listdir(path_init)
         for file in files_list:
             if os.path.isfile(path_init + file):

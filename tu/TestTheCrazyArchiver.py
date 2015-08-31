@@ -56,7 +56,7 @@ class TestTheCrazyArchiver(unittest.TestCase):
         os.rename("mario.tar", "tmp/mario.tar")
 
         path = os.path.abspath(os.path.dirname(sys.argv[1])) + "/tmp/mario.tar"
-        TheCrazyArchiver.unarchive_tar_file(path)
+        TheCrazyArchiver.unarchive(path)
 
         self.assertTrue(os.path.exists("tmp/directory/directory/directory/mario"))
 
@@ -73,7 +73,7 @@ class TestTheCrazyArchiver(unittest.TestCase):
 
         file_tar = file + "_" + str(i) + ".tar"
         path = os.path.abspath(os.path.dirname(sys.argv[1])) + file_tar
-        TheCrazyArchiver.unarchive_tar_file(path)
+        TheCrazyArchiver.unarchive(path)
 
         path = "tmp"
         for i in range(0, 3):

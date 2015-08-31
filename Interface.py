@@ -13,11 +13,11 @@ from TheCrazyArchiver import TheCrazyArchiver
 class Interface(Tk):
     def __init__(self):
         Tk.__init__(self)
-        name = LocalisationFr.WINDOW_PROGRAM_NAME.value
-        self.title(name)
+        self.title(LocalisationFr.WINDOW_PROGRAM_NAME.value)
         self.panel_archive = self.panel_archive()
         self.panel_unarchive = self.panel_unarchive()
         self.menu()
+        self.resizable(width=FALSE, height=FALSE)
 
     def menu(self):
         menubar = Menu(self, tearoff=0)
@@ -35,34 +35,33 @@ class Interface(Tk):
 
     def panel_archive(self):
         panel_archive = PanedWindow(self, orient=HORIZONTAL)
-        p_name = PanedWindow(panel_archive, orient=HORIZONTAL)
-        p_name.add(Label(p_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
-        self.entry_file_name = Entry(p_name, textvariable=StringVar())
-        p_name.add(self.entry_file_name)
-
-        p_name.add(Button(panel_archive, text="Browse", command=self.load_file, width=5))
-        p_name.pack(side=TOP, fill=BOTH, padx=5)
-
+        p_file_name = PanedWindow(panel_archive, orient=HORIZONTAL)
+        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
+        self.archive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
+        p_file_name.add(self.archive_input_file_path)
+        p_file_name.add(Button(panel_archive, text="Browse", command=self.load_file))
+        p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
         p_count = PanedWindow(panel_archive, orient=HORIZONTAL)
         p_count.add(Label(p_count, text=LocalisationFr.PANEL_ARCHIVE_LOOP.value))
-        self.entry_nb_loop = Entry(self, textvariable=StringVar(), width=4)
-        p_count.add(self.entry_nb_loop)
+        self.archive_input_loop = Entry(self, textvariable=StringVar(), width=4)
+        p_count.add(self.archive_input_loop)
         p_count.pack(side=TOP, padx=10)
 
         Button(panel_archive, text=LocalisationFr.PANEL_ARCHIVE_BUTTON.value, command=self.launchArchiving).pack(
             padx=10, pady=10)
         panel_archive.pack()
+
         return panel_archive
 
     def panel_unarchive(self):
         panel_unarchive = PanedWindow(self, orient=HORIZONTAL)
-        p_name = PanedWindow(panel_unarchive, orient=HORIZONTAL)
-        p_name.add(Label(p_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
-        self.entry_file_name = Entry(p_name, textvariable=StringVar(), width=20)
-        p_name.add(self.entry_file_name)
-
-        p_name.pack(side=TOP, fill=BOTH, padx=10)
+        p_file_name = PanedWindow(panel_unarchive, orient=HORIZONTAL)
+        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
+        self.unarchive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
+        p_file_name.add(self.unarchive_input_file_path)
+        p_file_name.add(Button(panel_unarchive, text="Browse", command=self.load_file))
+        p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
         Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launchUnarchiving).pack(
             padx=10, pady=10)
@@ -70,32 +69,31 @@ class Interface(Tk):
 
     def launchArchiving(self):
         try:
-            file_name = str(self.entry_file_name.get())
-            nb_loop = int(self.entry_nb_loop.get())
+            file_name = str(self.archive_input_file_path.get())
+            nb_loop = int(self.archive_input_loop.get())
             TheCrazyArchiver.archive(file_name, nb_loop)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été archivé récursivement " + str(
                 nb_loop) + " fois."
             messagebox.showinfo("Information", message)
         except ValueError:
-            messagebox.showerror(LocalisationFr.MESSAGE_TITLE_EMPTY_NAME_FILE_OR_LOOP,
+            messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value,
                                  LocalisationFr.MESSAGE_EMPTY_NAME_FILE_OR_LOOP.value)
         except IOError:
-            messagebox.showerror(LocalisationFr.EXCEPTION_FILE_MISSING)
+            messagebox.showerror(LocalisationFr.ExceptionFileMissing(file_name))
         except ExceptionFileMissing as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
     def launchUnarchiving(self):
         try:
-            file_name = str(self.entry_file_name.get())
-            nb_loop = int(self.entry_nb_loop.get())
+            file_name = str(self.unarchive_input_file_path.get())
             TheCrazyArchiver.unarchive(file_name)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été désarchivé récursivement "
-            messagebox.showinfo(LocalisationFr.MESSAGE_INFORMATION, message)
+            messagebox.showinfo(LocalisationFr.MESSAGE_INFORMATION.value, message)
         except ValueError:
             messagebox.showerror(LocalisationFr.MESSAGE_WARNING.value,
                                  LocalisationFr.MESSAGE_EMPTY_NAME_FILE_OR_LOOP.value)
         except IOError:
-            messagebox.showerror(LocalisationFr.EXCEPTION_FILE_MISSING)
+                messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionFileMissing(file_name))
         except ExceptionFileMissing as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
@@ -103,10 +101,14 @@ class Interface(Tk):
         fname = askopenfilename()
         if fname:
             try:
-                print("""here it comes: self.settings["template"].set(fname)""")
-            except:  # <- naked except is a bad idea
+                self.archive_input_file_path.delete(0, 10000)
+                self.unarchive_input_file_path.delete(0, 10000)
+                self.archive_input_file_path.insert(0, fname)
+                self.unarchive_input_file_path.insert(0, fname)
+            except:
                 showerror("Open Source File", "Failed to read file\n'%s'" % fname)
             return
+
 
 
 i = Interface()
