@@ -4,9 +4,11 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
+import tarfile
 
 from LocalisationFr import LocalisationFr
-from exception.ExceptionFileMissing import ExceptionFileMissing
+from exception.ExceptionMissingFile import ExceptionMissingFile
+from exception.ExceptionMissingTar import ExceptionMissingTar
 from TheCrazyArchiver import TheCrazyArchiver
 
 
@@ -80,7 +82,7 @@ class Interface(Tk):
                                  LocalisationFr.MESSAGE_EMPTY_NAME_FILE_OR_LOOP.value)
         except IOError:
             messagebox.showerror(LocalisationFr.ExceptionFileMissing(file_name))
-        except ExceptionFileMissing as e:
+        except ExceptionMissingFile as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
     def launchUnarchiving(self):
@@ -93,9 +95,11 @@ class Interface(Tk):
             messagebox.showerror(LocalisationFr.MESSAGE_WARNING.value,
                                  LocalisationFr.MESSAGE_EMPTY_NAME_FILE_OR_LOOP.value)
         except IOError:
-                messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionFileMissing(file_name))
-        except ExceptionFileMissing as e:
+                messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionMissingFile(file_name))
+        except ExceptionMissingFile as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
+        except tarfile.ReadError:
+            messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionMissingTar(file_name))
 
     def load_file(self):
         fname = askopenfilename()

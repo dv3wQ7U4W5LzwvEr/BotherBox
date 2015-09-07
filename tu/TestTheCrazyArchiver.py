@@ -3,14 +3,17 @@ import unittest
 import shutil
 import os
 import tarfile
-import sys
 
 from TheCrazyArchiver import TheCrazyArchiver
 from exception.ExceptionNbLoop import ExceptionNbLoop
-from exception.ExceptionFileMissing import ExceptionFileMissing
+from exception.ExceptionMissingFile import ExceptionMissingFile
+from exception.ExceptionExistingFile import ExceptionExistingFile
+
 
 
 class TestTheCrazyArchiver(unittest.TestCase):
+
+    NB_LOOP = 20  # bug when you exceed 19, don't know why
 
     def setUp(self):
         if os.path.isdir("tmp"):
@@ -20,7 +23,7 @@ class TestTheCrazyArchiver(unittest.TestCase):
         fichier = open("__init__.py", "w")
         fichier.close()
 
-    def test_archive_wrong_input(self):
+    def test_wrong_input(self):
         # input : a loop number which is a word
         with self.assertRaises(ValueError):
             TheCrazyArchiver.archive("a", "a")
@@ -30,14 +33,20 @@ class TestTheCrazyArchiver(unittest.TestCase):
             TheCrazyArchiver.archive("a", (-1))
 
         # input : a wrong file name
-        with self.assertRaises(ExceptionFileMissing):
+        with self.assertRaises(ExceptionMissingFile):
             TheCrazyArchiver.archive("svsodoaae", 1)
+
+        with self.assertRaises(tarfile.ReadError):
+            file_name = "tmp/mario"
+            file = open(file_name, "w")
+            file.close()
+            TheCrazyArchiver.unarchive(file_name)
 
     def test_unarchive(self):
         # creation du fichier
-        fichier = open("mario", "w")
-        fichier.writelines("luigi")
-        fichier.close()
+        file = open("mario", "w")
+        file.writelines("luigi")
+        file.close()
         # creation de l'archive
         tar = tarfile.open("mario.tar", "w")
         tar.add("mario")
@@ -55,30 +64,58 @@ class TestTheCrazyArchiver(unittest.TestCase):
         os.remove("peach.tar")
         os.rename("mario.tar", "tmp/mario.tar")
 
-        path = os.path.abspath(os.path.dirname(sys.argv[1])) + "/tmp/mario.tar"
+        path = os.path.dirname(os.path.abspath(__file__)) + "/tmp/mario.tar"
         TheCrazyArchiver.unarchive(path)
 
-        self.assertTrue(os.path.exists("tmp/directory/directory/directory/mario"))
+        self.assertTrue(os.path.exists("tmp/mario"))
+
+    def test_unarchive_existing_file(self):
+        file_name = "mario"
+        file = open(file_name, "w")
+        file.writelines("luigi")
+        file.close()
+        filetar_path = "mario.tar"
+        tar = tarfile.open(filetar_path, "w")
+        tar.add("mario")
+        tar.close()
+
+        os.rename(file_name, "tmp\\" + file_name)
+        tar_path = os.path.dirname(os.path.abspath(__file__)) + "\\tmp\\mario.tar"
+        os.rename(filetar_path, tar_path)
+        with self.assertRaises(ExceptionExistingFile):
+            TheCrazyArchiver.unarchive(tar_path)
+
+    def test_archive_keep_original_file_safe(self):
+        path_cur_directory = os.path.dirname(os.path.abspath(__file__))
+        file_path = path_cur_directory + "\\tmp\mario"
+        file = open(file_path, "w")
+        content = "luigi"
+        file.writelines(content)
+        file.close()
+
+        TheCrazyArchiver.archive(file_path, self.NB_LOOP)
+        self.assertTrue(os.path.exists(file_path))
+
+        file = open(file_path, "r")
+        line = file.readline()
+        file.close()
+        self.assertEqual(content, line)
 
     def test_archive(self):
-        fichier = open("mario", "w")
-        fichier.writelines("luigi")
-        fichier.close()
-        os.rename("mario", "tmp/mario")
+        path_cur_directory = os.path.dirname(os.path.abspath(__file__))
+        file_path = path_cur_directory + "\\tmp\mario"
+        file = open(file_path, "w")
+        file.writelines("luigi")
+        file.close()
 
-        file = "/tmp/mario"
-        path = os.path.abspath(os.path.dirname(sys.argv[1])) + file
-        i = 3
-        TheCrazyArchiver.archive(path, i)
+        TheCrazyArchiver.archive(file_path, self.NB_LOOP)
+        os.remove(file_path)
 
-        file_tar = file + "_" + str(i) + ".tar"
-        path = os.path.abspath(os.path.dirname(sys.argv[1])) + file_tar
-        TheCrazyArchiver.unarchive(path)
+        file_tar = file_path + ".tar"
+        TheCrazyArchiver.unarchive(file_tar)
 
-        path = "tmp"
-        for i in range(0, 3):
-            path += "/directory"
-        self.assertTrue(os.path.exists(path + "/mario"))
+        path = "tmp/mario"
+        self.assertTrue(os.path.exists(path))
 
     def tearDown(self):
         if os.path.isdir("tmp"):

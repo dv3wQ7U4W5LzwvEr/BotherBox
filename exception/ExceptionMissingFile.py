@@ -1,7 +1,7 @@
 __author__ = 'root'
 
 
-class ExceptionFileMissing(Exception):
+class ExceptionMissingFile(Exception):
 
     def __init__(self, file_name):
         self.value = "Le fichier '" + file_name + "' n'a pas été trouvé."
