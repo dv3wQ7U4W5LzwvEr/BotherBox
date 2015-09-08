@@ -1,2 +1,4 @@
-# TheCrazyCompressor
-A funny tool developed in python which compress some files in an other file in an other file etc ^^
+# Hidify
+A funny tool developed in python which allow to :
+  - put a file in a archive which is in an other archive etc
+  - get the file hide by the programm
