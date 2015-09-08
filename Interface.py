@@ -9,6 +9,8 @@ import tarfile
 from LocalisationFr import LocalisationFr
 from exception.ExceptionMissingFile import ExceptionMissingFile
 from exception.ExceptionMissingTar import ExceptionMissingTar
+from exception.ExceptionExistingTar import ExceptionExistingTar
+from exception.ExceptionExistingFile import ExceptionExistingFile
 from TheCrazyArchiver import TheCrazyArchiver
 
 
@@ -67,6 +69,7 @@ class Interface(Tk):
 
         Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launchUnarchiving).pack(
             padx=10, pady=10)
+
         return panel_unarchive
 
     def launchArchiving(self):
@@ -84,6 +87,8 @@ class Interface(Tk):
             messagebox.showerror(LocalisationFr.ExceptionFileMissing(file_name))
         except ExceptionMissingFile as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
+        except ExceptionExistingTar as e:
+            messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
     def launchUnarchiving(self):
         try:
@@ -93,13 +98,15 @@ class Interface(Tk):
             messagebox.showinfo(LocalisationFr.MESSAGE_INFORMATION.value, message)
         except ValueError:
             messagebox.showerror(LocalisationFr.MESSAGE_WARNING.value,
-                                 LocalisationFr.MESSAGE_EMPTY_NAME_FILE_OR_LOOP.value)
+                                 LocalisationFr.MESSAGE_EMPTY_NAME.value)
         except IOError:
                 messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionMissingFile(file_name))
         except ExceptionMissingFile as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
         except tarfile.ReadError:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, ExceptionMissingTar(file_name))
+        except ExceptionExistingFile as e:
+            messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
     def load_file(self):
         fname = askopenfilename()

@@ -15,8 +15,8 @@ class LocalisationFr(Enum):
 
     PANEL_UNARCHIVE_BUTTON = "Désarchiver"
 
-
-    MESSAGE_EMPTY_NAME_FILE_OR_LOOP = "Il est nécessaire de saisir le nom du fichier et un nombre de tour positif."
+    MESSAGE_EMPTY_NAME = "Il est nécessaire de saisir le nom du fichier"
+    MESSAGE_EMPTY_NAME_FILE_OR_LOOP = MESSAGE_EMPTY_NAME + " et un nombre de tour positif."
     MESSAGE_NB_LOOP_POSITIF = "Le nombre de tour de boucle doit être positif"
     MESSAGE_INFORMATION = "Information"
     MESSAGE_WARNING = "Attention"
