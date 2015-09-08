@@ -20,22 +20,32 @@ class Interface(Tk):
         self.title(LocalisationFr.WINDOW_PROGRAM_NAME.value)
         self.panel_archive = self.panel_archive()
         self.panel_unarchive = self.panel_unarchive()
+        self.panel_about = self.panel_about()
         self.menu()
         self.resizable(width=FALSE, height=FALSE)
 
     def menu(self):
         menubar = Menu(self, tearoff=0)
-        menubar.add_command(label=LocalisationFr.PANEL_ARCHIVE_WINDOW_NAME.value, command=self.show_panel_archive)
+        menubar.add_command(label=LocalisationFr.PANEL_ARCHIVE.value, command=self.show_panel_archive)
         menubar.add_command(label=LocalisationFr.PANEL_UNARCHIVE.value, command=self.show_panel_unarchive)
+        menubar.add_command(label=LocalisationFr.PANEL_ABOUT.value, command=self.show_panel_about)
+
         self.config(menu=menubar)
 
     def show_panel_archive(self):
         self.panel_unarchive.pack_forget()
+        self.panel_about.pack_forget()
         self.panel_archive.pack()
 
     def show_panel_unarchive(self):
         self.panel_archive.pack_forget()
+        self.panel_about.pack_forget()
         self.panel_unarchive.pack()
+
+    def show_panel_about(self):
+        self.panel_archive.pack_forget()
+        self.panel_unarchive.pack_forget()
+        self.panel_about.pack()
 
     def panel_archive(self):
         panel_archive = PanedWindow(self, orient=HORIZONTAL)
@@ -43,7 +53,7 @@ class Interface(Tk):
         p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
         self.archive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
         p_file_name.add(self.archive_input_file_path)
-        p_file_name.add(Button(panel_archive, text="Browse", command=self.load_file))
+        p_file_name.add(Button(panel_archive, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
         p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
         p_count = PanedWindow(panel_archive, orient=HORIZONTAL)
@@ -64,13 +74,21 @@ class Interface(Tk):
         p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
         self.unarchive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
         p_file_name.add(self.unarchive_input_file_path)
-        p_file_name.add(Button(panel_unarchive, text="Browse", command=self.load_file))
+        p_file_name.add(Button(panel_unarchive, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
         p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
         Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launchUnarchiving).pack(
             padx=10, pady=10)
 
         return panel_unarchive
+
+    def panel_about(self):
+        panel_about = PanedWindow(self, orient=HORIZONTAL)
+        p_file_name = PanedWindow(panel_about, orient=HORIZONTAL)
+        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ABOUT_CONTENT.value))
+        p_file_name.pack(side=TOP, fill=BOTH, padx=5)
+
+        return panel_about
 
     def launchArchiving(self):
         try:
