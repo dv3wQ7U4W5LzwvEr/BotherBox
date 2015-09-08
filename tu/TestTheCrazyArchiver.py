@@ -35,7 +35,7 @@ class TestTheCrazyArchiver(unittest.TestCase):
 
         # input : a wrong file name
         with self.assertRaises(ExceptionMissingFile):
-            TheCrazyArchiver.archive("svsodoaae", 1)
+            TheCrazyArchiver.archive("aaaa", 1)
 
         # input : is not a tar file
         with self.assertRaises(tarfile.ReadError):
