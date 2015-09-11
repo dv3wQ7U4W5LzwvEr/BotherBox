@@ -11,7 +11,7 @@ from exception.ExceptionMissingFile import ExceptionMissingFile
 from exception.ExceptionMissingTar import ExceptionMissingTar
 from exception.ExceptionExistingTar import ExceptionExistingTar
 from exception.ExceptionExistingFile import ExceptionExistingFile
-from TheCrazyArchiver import TheCrazyArchiver
+from ArchiveMotor import ArchiveMotor
 
 
 class Interface(Tk):
@@ -23,6 +23,7 @@ class Interface(Tk):
         self.panel_about = self.panel_about()
         self.menu()
         self.resizable(width=FALSE, height=FALSE)
+        self.show_panel_archive()
 
     def menu(self):
         menubar = Menu(self, tearoff=0)
@@ -64,7 +65,6 @@ class Interface(Tk):
 
         Button(panel_archive, text=LocalisationFr.PANEL_ARCHIVE_BUTTON.value, command=self.launchArchiving).pack(
             padx=10, pady=10)
-        panel_archive.pack()
 
         return panel_archive
 
@@ -94,7 +94,7 @@ class Interface(Tk):
         try:
             file_name = str(self.archive_input_file_path.get())
             nb_loop = int(self.archive_input_loop.get())
-            TheCrazyArchiver.archive(file_name, nb_loop)
+            ArchiveMotor.archive(file_name, nb_loop)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été archivé récursivement " + str(
                 nb_loop) + " fois."
             messagebox.showinfo("Information", message)
@@ -111,7 +111,7 @@ class Interface(Tk):
     def launchUnarchiving(self):
         try:
             file_name = str(self.unarchive_input_file_path.get())
-            TheCrazyArchiver.unarchive(file_name)
+            ArchiveMotor.unarchive(file_name)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été désarchivé récursivement "
             messagebox.showinfo(LocalisationFr.MESSAGE_INFORMATION.value, message)
         except ValueError:
@@ -136,9 +136,4 @@ class Interface(Tk):
                 self.unarchive_input_file_path.insert(0, fname)
             except:
                 showerror("Open Source File", "Failed to read file\n'%s'" % fname)
-            return
 
-
-
-i = Interface()
-i.mainloop()

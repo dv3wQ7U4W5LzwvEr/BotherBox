@@ -10,7 +10,7 @@ from exception.ExceptionExistingFile import ExceptionExistingFile
 from exception.ExceptionExistingTar import ExceptionExistingTar
 
 
-class TheCrazyArchiver:
+class ArchiveMotor:
 
     @staticmethod
     def archive(file, nb_loop):
@@ -19,6 +19,9 @@ class TheCrazyArchiver:
         nb_loop = int(nb_loop)
         if nb_loop <= 0:
             raise ExceptionNbLoop()
+
+        if nb_loop > 19:
+            nb_loop = 19
 
         if os.path.exists(file_path):
             file_name = os.path.basename(file_path)
@@ -49,7 +52,7 @@ class TheCrazyArchiver:
         tar = tarfile.open(file)
         path_tmp = os.path.dirname(os.path.realpath(file))
         tar.close()
-        file_hide_path = TheCrazyArchiver.__unarchive(path_tmp)
+        file_hide_path = ArchiveMotor.__unarchive(path_tmp)
         path_tmp += "\\directory"
         file_hide_path_2 = os.path.dirname(file_path) + "\\" + os.path.basename(file_hide_path)
         if os.path.exists(file_hide_path_2):
@@ -75,7 +78,7 @@ class TheCrazyArchiver:
                     files_list = os.listdir(path_before)
                     for f in files_list:
                         if f.endswith('.tar'):
-                            file_hide_path = TheCrazyArchiver.__unarchive(path_after)
+                            file_hide_path = ArchiveMotor.__unarchive(path_after)
                 except tarfile.ReadError:
                     if file_hide_path is "":
                         print("Fin de l'extraction du fichier : " + file)
