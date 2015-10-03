@@ -77,7 +77,7 @@ class Interface(Tk):
         p_file_name.add(Button(panel_unarchive, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
         p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
-        Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launchUnarchiving).pack(
+        Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launch_unarchiving).pack(
             padx=10, pady=10)
 
         return panel_unarchive
@@ -108,7 +108,7 @@ class Interface(Tk):
         except ExceptionExistingTar as e:
             messagebox.showerror(LocalisationFr.MESSAGE_ERROR.value, e.value)
 
-    def launchUnarchiving(self):
+    def launch_unarchiving(self):
         try:
             file_name = str(self.unarchive_input_file_path.get())
             ArchiveMotor.unarchive(file_name)
