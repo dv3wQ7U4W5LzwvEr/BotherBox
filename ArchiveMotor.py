@@ -47,13 +47,13 @@ class ArchiveMotor:
             raise ExceptionMissingFile(file_path)
 
     @staticmethod
-    def unarchive(file):
-        file_path = os.path.realpath(file)
-        tar = tarfile.open(file)
-        path_tmp = os.path.dirname(os.path.realpath(file))
+    def unarchive(file_path):
+        file_path = os.path.realpath(file_path)
+        tar = tarfile.open(file_path)
+        path_tmp = os.path.dirname(file_path) + "\\directory"
+        tar.extractall(path_tmp)
         tar.close()
         file_hide_path = ArchiveMotor.__unarchive(path_tmp)
-        path_tmp += "\\directory"
         file_hide_path_2 = os.path.dirname(file_path) + "\\" + os.path.basename(file_hide_path)
         if os.path.exists(file_hide_path_2):
             if os.path.exists(path_tmp):
