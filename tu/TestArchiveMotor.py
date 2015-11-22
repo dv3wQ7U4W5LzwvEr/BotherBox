@@ -14,6 +14,8 @@ from exception.ExceptionExistingTar import ExceptionExistingTar
 
 class TestArchiveMotor(unittest.TestCase):
 
+    # Tests work but maybe not at the first or second time
+
     NB_LOOP = 10  # bug when you exceed 19, don't know why
     TMP_PATH = "tmp"
 
