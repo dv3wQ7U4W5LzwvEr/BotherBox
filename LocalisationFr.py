@@ -17,7 +17,7 @@ class LocalisationFr(Enum):
     PANEL_UNARCHIVE = "Désarchivage"
 
     PANEL_ABOUT = "A propos"
-    PANEL_ABOUT_CONTENT = "Hidify a été créé par Florian VAUTARD. Il est possible de l'utiliser et de le modifier mais en\n ancun cas de" \
+    PANEL_ABOUT_CONTENT = "Hidify a été créé par Florian VAUTARD. Il est possible de l'utiliser et/ou de le modifier mais en\n ancun cas de" \
                   " de le vendre sans son autorisation."
 
     PANEL_HIDIFY = "HIDIFY"
