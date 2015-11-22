@@ -1,15 +1,14 @@
 __author__ = 'root'
-import unittest
-import shutil
 import os
+import shutil
 import tarfile
+import unittest
 
-from ArchiveMotor import ArchiveMotor
-from exception.ExceptionNbLoop import ExceptionNbLoop
-from exception.ExceptionMissingFile import ExceptionMissingFile
 from exception.ExceptionExistingFile import ExceptionExistingFile
 from exception.ExceptionExistingTar import ExceptionExistingTar
-
+from exception.ExceptionMissingFile import ExceptionMissingFile
+from exception.ExceptionNbLoop import ExceptionNbLoop
+from motor.ArchiveMotor import ArchiveMotor
 
 
 class TestArchiveMotor(unittest.TestCase):

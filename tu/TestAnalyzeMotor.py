@@ -1,11 +1,10 @@
 __author__ = 'root'
-import unittest
-import shutil
 import os
+import shutil
+import unittest
 
 from exception.ExceptionMissingDirectory import ExceptionMissingDirectory
-
-from AnalyzeMotor import AnalyzeMotor
+from motor.AnalyzeMotor import AnalyzeMotor
 
 
 class TestArchiveMotor(unittest.TestCase):

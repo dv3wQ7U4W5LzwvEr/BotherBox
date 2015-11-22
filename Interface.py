@@ -1,27 +1,27 @@
 __author__ = 'root'
 
-import tarfile
 import datetime
+import tarfile
 from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
 
-from ArchiveMotor import ArchiveMotor
-from AnalyzeMotor import AnalyzeMotor
+from motor.AnalyzeMotor import AnalyzeMotor
+from motor.ArchiveMotor import ArchiveMotor
 
 from exception.ExceptionExistingFile import ExceptionExistingFile
 from exception.ExceptionExistingTar import ExceptionExistingTar
+from exception.ExceptionMissingDirectory import ExceptionMissingDirectory
 from exception.ExceptionMissingFile import ExceptionMissingFile
 from exception.ExceptionMissingTar import ExceptionMissingTar
-from exception.ExceptionMissingDirectory import ExceptionMissingDirectory
 from exception.ExceptionPermissionDenied import ExceptionPermissionDenied
-
+from motor.ArchiveMotor import ArchiveMotor
 from package.fr.Localisation import Localisation
-from package.fr.Localisation_Hidify import Localisation_Hidify
-from package.fr.Localisation_Files_Finder import Localisation_Files_Finder
 from package.fr.Localisation_About import Localisation_About
+from package.fr.Localisation_Files_Finder import Localisation_Files_Finder
+from package.fr.Localisation_Hidify import Localisation_Hidify
 
 
 class Interface(Tk):
