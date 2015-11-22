@@ -52,8 +52,8 @@ class Interface(Tk):
 
         p_file_name = PanedWindow(panel_hidify, orient=HORIZONTAL)
         p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
-        self.archive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
-        p_file_name.add(self.archive_input_file_path)
+        self.input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
+        p_file_name.add(self.input_file_path)
         p_file_name.add(Button(panel_hidify, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
 
         panel_features = PanedWindow(panel_hidify, orient=HORIZONTAL)
@@ -80,7 +80,7 @@ class Interface(Tk):
 
     def launchArchiving(self):
         try:
-            file_name = str(self.archive_input_file_path.get())
+            file_name = str(self.input_file_path.get())
             nb_loop = int(self.archive_input_loop.get())
             ArchiveMotor.archive(file_name, nb_loop)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été archivé récursivement " + str(
@@ -98,7 +98,7 @@ class Interface(Tk):
 
     def launch_unarchiving(self):
         try:
-            file_name = str(self.unarchive_input_file_path.get())
+            file_name = str(self.input_file_path.get())
             ArchiveMotor.unarchive(file_name)
             message = "Félicitation ! Le fichier '" + file_name + "' a bien été désarchivé récursivement "
             messagebox.showinfo(LocalisationFr.MESSAGE_INFORMATION.value, message)
@@ -118,10 +118,8 @@ class Interface(Tk):
         fname = askopenfilename()
         if fname:
             try:
-                self.archive_input_file_path.delete(0, 10000)
-                self.unarchive_input_file_path.delete(0, 10000)
-                self.archive_input_file_path.insert(0, fname)
-                self.unarchive_input_file_path.insert(0, fname)
+                self.input_file_path.delete(0, 10000)
+                self.input_file_path.insert(0, fname)
             except:
                 showerror("Open Source File", "Failed to read file\n'%s'" % fname)
 
