@@ -18,77 +18,65 @@ class Interface(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title(LocalisationFr.WINDOW_PROGRAM_NAME.value)
-        self.panel_archive = self.panel_archive()
-        self.panel_unarchive = self.panel_unarchive()
-        self.panel_about = self.panel_about()
+        self.panel_hidify = self.create_panel_hidify()
+        self.panel_about = self.create_panel_about()
         self.menu()
         self.resizable(width=FALSE, height=FALSE)
-        self.show_panel_archive()
+        self.show_panel_hidify()
 
     def menu(self):
         menubar = Menu(self, tearoff=0)
-        menubar.add_command(label=LocalisationFr.PANEL_ARCHIVE.value, command=self.show_panel_archive)
-        menubar.add_command(label=LocalisationFr.PANEL_UNARCHIVE.value, command=self.show_panel_unarchive)
+        menubar.add_command(label=LocalisationFr.PANEL_HIDIFY.value, command=self.show_panel_hidify)
         menubar.add_command(label=LocalisationFr.PANEL_ABOUT.value, command=self.show_panel_about)
 
         self.config(menu=menubar)
 
-    def show_panel_archive(self):
-        self.panel_unarchive.pack_forget()
-        self.panel_about.pack_forget()
-        self.panel_archive.pack()
-
-    def show_panel_unarchive(self):
-        self.panel_archive.pack_forget()
-        self.panel_about.pack_forget()
-        self.panel_unarchive.pack()
-
     def show_panel_about(self):
-        self.panel_archive.pack_forget()
-        self.panel_unarchive.pack_forget()
+        self.panel_hidify.pack_forget()
         self.panel_about.pack()
 
-    def panel_archive(self):
-        panel_archive = PanedWindow(self, orient=HORIZONTAL)
-        p_file_name = PanedWindow(panel_archive, orient=HORIZONTAL)
-        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
-        self.archive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
-        p_file_name.add(self.archive_input_file_path)
-        p_file_name.add(Button(panel_archive, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
-        p_file_name.pack(side=TOP, fill=BOTH, padx=5)
+    def show_panel_hidify(self):
+        self.panel_hidify.pack()
+        self.panel_about.pack_forget()
 
-        p_count = PanedWindow(panel_archive, orient=HORIZONTAL)
-        p_count.add(Label(p_count, text=LocalisationFr.PANEL_ARCHIVE_LOOP.value))
-        self.archive_input_loop = Entry(self, textvariable=StringVar(), width=4)
-        p_count.add(self.archive_input_loop)
-        p_count.pack(side=TOP, padx=10)
-
-        Button(panel_archive, text=LocalisationFr.PANEL_ARCHIVE_BUTTON.value, command=self.launchArchiving).pack(
-            padx=10, pady=10)
-
-        return panel_archive
-
-    def panel_unarchive(self):
-        panel_unarchive = PanedWindow(self, orient=HORIZONTAL)
-        p_file_name = PanedWindow(panel_unarchive, orient=HORIZONTAL)
-        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
-        self.unarchive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
-        p_file_name.add(self.unarchive_input_file_path)
-        p_file_name.add(Button(panel_unarchive, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
-        p_file_name.pack(side=TOP, fill=BOTH, padx=5)
-
-        Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launch_unarchiving).pack(
-            padx=10, pady=10)
-
-        return panel_unarchive
-
-    def panel_about(self):
+    def create_panel_about(self):
         panel_about = PanedWindow(self, orient=HORIZONTAL)
         p_file_name = PanedWindow(panel_about, orient=HORIZONTAL)
         p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ABOUT_CONTENT.value))
         p_file_name.pack(side=TOP, fill=BOTH, padx=5)
 
         return panel_about
+
+    def create_panel_hidify(self):
+        panel_hidify = PanedWindow(self, orient=VERTICAL)
+
+        p_file_name = PanedWindow(panel_hidify, orient=HORIZONTAL)
+        p_file_name.add(Label(p_file_name, text=LocalisationFr.PANEL_ARCHIVE_FILE_NAME.value))
+        self.archive_input_file_path = Entry(p_file_name, textvariable=StringVar(), width=50)
+        p_file_name.add(self.archive_input_file_path)
+        p_file_name.add(Button(panel_hidify, text=LocalisationFr.TEXT_BROWSE.value, command=self.load_file))
+
+        panel_features = PanedWindow(panel_hidify, orient=HORIZONTAL)
+
+        panel_archive = PanedWindow(self, orient=VERTICAL)
+        p_count = PanedWindow(panel_archive, orient=HORIZONTAL)
+        p_count.add(Label(p_count, text=LocalisationFr.PANEL_ARCHIVE_LOOP.value))
+        self.archive_input_loop = Entry(self, textvariable=StringVar(), width=4)
+        p_count.add(self.archive_input_loop)
+
+        panel_archive.add(p_count)
+        panel_archive.add(Button(panel_archive, text=LocalisationFr.PANEL_ARCHIVE_BUTTON.value, command=self.launchArchiving))
+
+        panel_unarchive = PanedWindow(self)
+        b_unarchiving = Button(panel_unarchive, text=LocalisationFr.PANEL_UNARCHIVE_BUTTON.value, command=self.launch_unarchiving)
+        panel_unarchive.add(b_unarchiving)
+
+        panel_hidify.add(p_file_name)
+        panel_hidify.add(panel_features)
+        panel_features.add(panel_archive)
+        panel_features.add(panel_unarchive)
+
+        return panel_hidify
 
     def launchArchiving(self):
         try:
